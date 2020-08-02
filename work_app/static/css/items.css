@@ -1,0 +1,39 @@
+.items_table_header {
+    background: #567b8f;
+    color: white;
+}
+
+.item_row {
+    color: #1c173f;
+    background: white;
+}
+
+.items td {
+    font-size: 12px;
+    border: 1px solid #73acc5;
+    height: 24px;
+    vertical-align: center;
+    text-align: center;
+
+}
+
+.items th {
+    align-items: center;
+    font-weight: normal;
+    font-size: 10px;
+    text-align: center;
+    border: 1px solid #73acc5;
+}
+
+.items tr:nth-child(even) {
+    background: #e3e3e3;
+}
+
+.item_row:hover {
+    opacity: .4;
+}
+
+.item_form_field {
+    font-size: 12px;
+}
+

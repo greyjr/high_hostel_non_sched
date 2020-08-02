@@ -1,0 +1,392 @@
+<div class="b-popup" id="popup1" align="center">
+    <div class="b-popup-content">
+        <div align="center">
+            <form class="order_form was-validated">
+                {% csrf_token %}
+                <div align="center">
+                    <p style="font-size: 16px"><b><u>{% if order_form.data|length != 4 %} Размещение №
+                        {{ order_form.id_order.value }} {% else %} Новое размещение {% endif %} {{ status }}</u></b>
+                    </p>
+                </div>
+                <hr>
+
+
+                {% if order_form.data|length != 4 %}
+                    <div align="center" id="delete_button_div" style="display: none">
+
+                        <a id="dialog_delete_order"
+                           class="btn btn-outline-danger btn-mini">Удалить
+                        </a>
+
+                        <div id="last_button_delete"
+                             class="last_button_delete_class"
+                             style="visibility: hidden">
+
+                            <p>Вы уверены? Восстановить уже не удастся. Только создавать новый заказ.</p>
+                            <div class="div_at_row">
+
+                                <a class="btn btn-outline-danger btn-mini" id="delete_this_order">
+                                    Удалить
+                                </a>
+
+                                <a class="btn btn-outline-success btn-mini" id="cancel_delete_order">
+                                    Отмена
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <hr>
+                    </div>
+                {% endif %}
+
+
+                {% if order_form.is_reserved.value or order_form.data|length == 4 %}
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-outline-warning btn-sm active" id="toggle_reserved">
+                            <input type="radio" name="toggle_reserved" autocomplete="off" checked
+                                   onclick="reset_required()">
+                            Бронирование
+                        </label>
+                        <label class="btn btn-outline-success btn-sm" id="toggle_full_order">
+                            <input type="radio" name="toggle_reserved" autocomplete="off" onclick="set_required()">
+                            Оформление заказа
+                        </label>
+                    </div>
+                    <br>
+                    <br>
+                {% endif %}
+
+                <div hidden class="form_line form-row" id="id_client_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.id_client.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.id_client }}</div>
+                </div>
+
+                <div class="form_line form-row" id="surname_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.surname.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.surname }}</div>
+                </div>
+
+                <div class="form_line form-row" id="name_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.name.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.name }}</div>
+                </div>
+
+                <div class="form_line form-row" id="patronymic_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.patronymic.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.patronymic }}</div>
+                </div>
+
+                <div class="form_line form-row" id="passport_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.passport.label }}</div>
+                    <div class="col-4" align="left">{{ order_form.passport }}</div>
+                    <div class="col-3">
+                        <a {% if order_form.data|length != 4 and not order_form.is_reserved.value %}hidden {% endif %}
+                           class="btn btn-info get_client_from_base"
+                           id="get_client_by_passport"
+                           style="height: 20px; line-height: .5; font-size: 12px">База
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form_line form-row" id="another_doc_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.another_document.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.another_document }}</div>
+                </div>
+
+                <div class="form_line form-row" id="phone_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.phone.label }}</div>
+                    <div class="col-4" align="left">{{ order_form.phone }}</div>
+                    <div class="col-3">
+                        <a {% if order_form.data|length != 4 and not order_form.is_reserved.value %}hidden {% endif %}
+                           class="btn btn-info"
+                           id="get_client_by_phone"
+                           style="height: 20px; line-height: .5; font-size: 12px">
+                            База
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form_line form-row" id="email_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.email.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.email }}</div>
+                </div>
+
+                <div class="form_line form-row" id="comment_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.comment.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.comment }}</div>
+                </div>
+                <hr>
+
+                <div class="form_line form-row" id="date_start_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.date_start.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.date_start }}</div>
+                </div>
+
+                <div class="form_line form-row" id="duration_form">
+                    <div class="col-5 my-auto" align="right">{{ order_form.duration.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.duration }} дней</div>
+                </div>
+
+                <div class="form_line form-row" id="date_stop_form">
+                    <div class="col-5 my-auto" align="right">дата выселения:</div>
+                    <div class="col-7" align="left">
+                        <span style="display: inline-block; background: white; border: 1px solid #8c8c8c; padding: 2px">
+                        до 12:00
+                        <span id="id_date_stop" style="color: #232323"></span></span>
+                    </div>
+                </div>
+
+                <div style="display: none">{{ order_form.order_bed }} {{ order_form.id_order }}</div>
+
+                <div class="form_line form-row" id="room_form">
+                    <div class="col-5 my-auto" align="right"> {{ order_form.order_bed_str.label }}</div>
+                    <div class="col-7" align="left">{{ order_form.order_bed_str }}</div>
+                </div>
+                <hr>
+                <div class="form_line form-row" id="price_form">
+                    <div class="col-5 " align="right">стоимость</div>
+                    <div class="col-3" align="left">
+                        <span id="id_total_price"
+                              style="display: inline-block; background: white; border: 1px solid #8c8c8c; padding: 2px">
+                        ХХХХ
+                        </span>&nbsp;грн.
+                    </div>
+
+                    {% if order_form.is_reserved.value or order_form.data|length == 4 %}
+                        <div class=" col-4 custom-control custom-checkbox mb-3" align="left" id="pay_checkbox">
+                            <input type="checkbox" class="custom-control-input" id="is_paid" required
+                                   onchange="toggle_checkbox_paid(this)">
+                            <label class="custom-control-label" for="is_paid" id="label_is_paid">Не оплачено</label>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </form>
+            <br>
+
+            {% if status != 'закрыто' and status != 'оплачено' %}
+                <a id="save_form" class="btn btn-outline-success"
+                   style="font-size: 16px; ">Сохранить</a>
+            {% endif %}
+
+        </div>
+        <br>
+
+        <div class="div_at_row" align="center">
+            <div style="margin-right: 80px" class="custom-control custom-switch"
+                    {% if order_form.data|length == 4 %}
+                 hidden
+                    {% endif %}>
+
+                <input style="height: 30px" type="checkbox" class="custom-control-input" id="enable_delete_order"
+                       onchange="toggle_enable_delete_order_button(this)">
+                <label class="custom-control-label" for="enable_delete_order"><span
+                        style="font-size: 9px">Удаление</span></label>
+            </div>
+
+            <div>
+                <a class="btn btn-sm btn-dark" id="close_form_button">Закрыть окно</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------- init form ---------------------------->
+<!--------------- close form --------------------------->
+<script>
+    $('#close_form_button').click(function () {
+        $('#pop_up_here').empty();
+    })
+</script>
+<!--------------- toggle reserved / true order --------->
+{% if order_form.is_reserved.value or order_form.data|length == 4 %}
+    <script>
+        var req_list = ['name', 'passport', 'phone'];
+        reset_required();
+
+        function reset_required() {
+            req_list.forEach(function (elem) {
+                $('#id_' + elem).removeAttr('required');
+                $('#pay_checkbox').hide();
+                {#reserved_mode = 'reserved';#}
+            })
+        }
+
+        function set_required() {
+            req_list.forEach(function (elem) {
+                $('#id_' + elem).attr('required', '');
+                $('#pay_checkbox').show();
+                {#reserved_mode = 'full_order';#}
+            })
+        }
+    </script>
+{% endif %}
+<!--------------- refresh date_stop -------------------->
+<script>
+    refresh_date_stop();
+
+    function refresh_date_stop() {
+        var date_for_refresh = new Date($('#id_date_start').val());
+        var duration_for_refresh = $('#id_duration').val() * 1;
+        date_for_refresh.setDate(date_for_refresh.getDate() + duration_for_refresh);
+        var dd = String(date_for_refresh.getDate()).padStart(2, '0');
+        var mm = String(date_for_refresh.getMonth() + 1).padStart(2, '0');
+        var yyyy = date_for_refresh.getFullYear();
+        $('#id_date_stop').empty();
+        $('#id_date_stop').append(dd + '.' + mm + '.' + yyyy);
+        $('#id_total_price').empty();
+        var total_price = 1 * {{ daily_price }} * duration_for_refresh;
+        $('#id_total_price').text(total_price);
+    }
+</script>
+<!--------------- show/hide delete button -------------->
+<script>
+    function toggle_enable_delete_order_button(checkboxElem) {
+        if (checkboxElem.checked) {
+            $('#delete_button_div').show('1000')
+        } else {
+            $('#delete_button_div').hide('1000')
+        }
+    }
+</script>
+<!--------------- show/hide delete dialog -------------->
+<script>
+    $('#dialog_delete_order').click(function () {
+        var a = document.getElementById('last_button_delete');
+        a.style.visibility = "visible";
+    })
+</script>
+<!--------------- delete/cancel order ------------------>
+<script>
+    $('#delete_this_order').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/delete_order',
+            data: {
+                'id_order': {{ order_form.id_order.value }},
+                'cell_date_string': '{{ cell_date_string }}',
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+                $('#pop_up_here').empty();
+                $('#content').empty();
+                $('#content').append(response);
+                $('#current_date').append('{{ cell_date_string }}');
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера, ёпт!');
+            }
+        })
+
+    });
+
+    $('#cancel_delete_order').click(function () {
+        $('#pop_up_here').empty();
+    });
+</script>
+<!--------------- base get client ---------------------->
+<script>
+    $('#get_client_by_phone').click(function () {
+        var phone_string = $('#id_phone').val().toString();
+        if (phone_string !== "") {
+            get_client_from_base(phone_string, 'phone')
+        }
+    });
+
+    $('#get_client_by_passport').click(function () {
+        var passport_string = $('#id_passport').val().toString();
+        if (passport_string !== "") {
+            get_client_from_base(passport_string, 'passport')
+        }
+    });
+
+    function get_client_from_base(text_for_search, mode) {
+        $.ajax({
+            type: "GET",
+            url: '/get_client_from_base',
+            data: {
+                'text_for_search': text_for_search,
+                'mode': mode
+            },
+            success: function (response) {
+                if (response['message'] === 'ok') {
+                    var id_list = ['id_client', 'surname', 'name', 'passport', 'patronymic', 'phone', 'email', 'comment', 'another_document'];
+                    id_list.forEach(function (elem) {
+                        $('#id_' + elem).val(response[elem]);
+                    })
+                }
+            },
+            error: function () {
+                console.log('ошибка при поиске клиента в базе')
+            }
+        })
+    }
+
+</script>
+<!--------------- toggle paid / not paid --------------->
+<script>
+    function toggle_checkbox_paid(checkboxElem) {
+        if (checkboxElem.checked) {
+            $('#label_is_paid').text('Оплачено')
+        } else {
+            $('#label_is_paid').text('Не оплачено')
+        }
+    }
+</script>
+<!--------------- save form ---------------------------->
+{% if status != 'оплачено' or status != 'закрыто' %}
+    <script>
+    $('#save_form').click(function () {
+        if (!is_enable_submit_button()) {
+            return false
+        }
+        var is_reserved = check_is_reserved();
+        var data_order = $('.order_form').serialize();
+        $.ajax({
+            type: "POST",
+            url: '/post_order_form',
+            data: {
+                'order_form': data_order,
+                'is_reserved': is_reserved,
+                'cell_date_string': '{{ cell_date_string }}',
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+                $('#pop_up_here').empty();
+                $('#content').empty();
+                $('#content').append(response);
+                $('#current_date').append('{{ cell_date_string }}');
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера, ёпт!');
+            }
+        })
+    });
+
+    function is_enable_submit_button() {
+        var toggle_element = document.getElementById("toggle_reserved");
+        if (toggle_element === null) {
+            return true
+        }
+        if (toggle_element.classList.contains('active')) {
+            return (document.getElementById("id_surname").value !== '')
+        } else {
+            var elem_list = ['id_surname', 'id_name', 'id_passport', 'id_phone'];
+            return elem_list.every(is_empty) && document.getElementById("label_is_paid").textContent === 'Оплачено'
+        }
+
+        function is_empty(elem) {
+            return (document.getElementById(elem).value.length !== 0)
+        }
+    }
+
+    function check_is_reserved() {
+        var toggle_element = document.getElementById("toggle_reserved");
+        if (toggle_element === null) {
+            return false
+        }
+        return toggle_element.classList.contains('active')
+    }
+{% endif %}
+</script>

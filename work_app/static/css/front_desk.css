@@ -1,0 +1,147 @@
+@font-face {
+    font-family: 'New_Font';
+    src: url("../font/adineuePROCyr-LightWeb.ttf");
+}
+
+#front_desk {
+    border: 1px solid;
+    border-radius: 3px;
+    margin: 5px;
+}
+
+#front_desk td {
+    /*padding: 0;*/
+    font-size: xx-small;
+    border: 1px solid;
+    color: #567b8f;
+    /*border-collapse: collapse;*/
+    /*font-family: "New_Font";*/
+}
+
+.header {
+    background: #f2f2f2;
+    font-size: 12px;
+    text-align: center;
+    padding: 0;
+}
+
+.empty {
+    border: none;
+    background: #f2f2f2;
+    font-size: 12px;
+    text-align: center;
+}
+
+.inner_td {
+    border-collapse: collapse;
+    border: dotted 1px;
+    background: white;
+    height: 20px;
+    width: 30px;
+}
+
+.inner_td:hover {
+    opacity: 0.2;
+    cursor: pointer;
+}
+
+.month_line {
+    padding-left: 3px;
+    background: #ddd9c4;
+    font-size: 12px;
+    height: 20px;
+    color: #334455;
+    text-align: center;
+}
+
+.room_line {
+    padding-left: 40px;
+    background: #ddd9c4;
+    font-size: 12px;
+    height: 20px;
+    /*font-stretch: ultra-expanded;*/
+    /*color: #334455*/
+}
+
+.bed_number {
+    background: #f2f2f2;
+    width: 36px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.free__ {
+    background: white;
+}
+
+.free_w {
+    background: #DAEEF3;
+}
+
+.repair {
+    background: linear-gradient(to bottom, #E8A2A2 50%, #d79191 70%, #a45e5e);;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.actual {
+    background: linear-gradient(to bottom, #8fffb4 60%, #7eeea3 80%, #4bbb70);
+}
+
+.past__ {
+    background: linear-gradient(to bottom, #bfbfbf 50%, #a0a0a0 70%, #777777);
+}
+
+.pre_or {
+    background: linear-gradient(to bottom, #eec560 50%, #ddb44f 70%, #aa811c);
+}
+
+.paid__ {
+    background: linear-gradient(to bottom, #eec560 30%, #4bbb70);
+}
+
+.b-popup {
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+}
+
+.b-popup .b-popup-content {
+
+    margin: 80px auto 0 20px;
+    /*width: min-content;*/
+    width: 35%;
+    height: auto;
+    padding: 10px;
+    background-color: #c5c5c5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #000;
+}
+
+.order_form {
+    font-size: 12px;
+    color: #1c173f;
+}
+
+.client_form {
+    font-size: 12px;
+}
+
+.form_line {
+    margin: 2px 0;
+}
+
+.btn-mini{
+    height: 20px;
+    line-height: .5;
+    font-size: 9px;
+}
+
+.div_at_row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

@@ -1,0 +1,106 @@
+<div class="b-popup" id="popup1" align="center">
+    <div class="b-popup-content item_create_form">
+        <form>
+
+            <div style="text-align: center; font-size: 20px; "><b><u>Новая расходная позиция</u></b></div>
+            <br>
+            <div class="item_form_field form-row">
+                <div class="col-6 my-auto"
+                     style="text-align:right; font-size: 12px">{{ form.name_item.label }}</div>
+                <div class="col-6"
+                     style="text-align:left; font-size: 12px">{{ form.name_item }}</div>
+            </div>
+            <br>
+
+            <div class="item_form_field form-row">
+                <div class="col-6 my-auto"
+                     style="text-align:right; font-size: 12px">{{ form.unit_item.label }}</div>
+                <div class="col-6"
+                     style="text-align:left; font-size: 12px">{{ form.unit_item }}</div>
+            </div>
+
+            <br>
+
+            <div class="item_form_field form-row">
+                <div class="col-6 my-auto"
+                     style="text-align:right; font-size: 12px">{{ form.recommended_minimum.label }}</div>
+                <div class="col-6"
+                     style="text-align:left; font-size: 12px">{{ form.recommended_minimum }}</div>
+            </div>
+
+            <br>
+
+            <div class="item_form_field form-row">
+                <div class="col-6 my-auto"
+                     style="text-align:right; font-size: 12px">{{ form.current_amount.label }}</div>
+                <div class="col-6"
+                     style="text-align:left; font-size: 12px">{{ form.current_amount }}</div>
+            </div>
+
+        </form>
+        <br>
+        <div>
+            <a class="btn btn-sm btn-outline-success" id="save_consumable_form_button">Сохранить</a>
+            <a class="btn btn-sm btn-outline-dark" id="close_consumable_form_button">Закрыть окно</a>
+        </div>
+
+    </div>
+</div>
+
+
+<!--------------- close form --------------------------->
+<script>
+    $('#close_consumable_form_button').click(function () {
+        $('#pop_up_here').empty();
+    });
+</script>
+<!--------------- save form ----------------------------->
+<script>
+    $('#save_consumable_form_button').click(function () {
+
+        var name_consumables_element = (document.getElementById('id_name_item'));
+        var name_consumables = name_consumables_element.value;
+        if (name_consumables_element.value.length === 0){
+            return false
+        }
+        var unit_consumables_element = (document.getElementById('id_unit_item'));
+        var unit_consumables = unit_consumables_element.value;
+        if (unit_consumables_element.value.length === 0){
+            return false
+        }
+
+
+        var current = (document.getElementById('id_current_amount'));
+        var current_amount = current.value;
+        if (current.value.length === 0 || current.value * 1 > 10000) {
+            current_amount = '0'
+        }
+        var recommend = (document.getElementById('id_recommended_minimum'));
+        var recommended_minimum = recommend.value;
+        if (recommend.value.length === 0 || recommend.value * 1 > 10000) {
+            recommended_minimum = '0'
+        }
+        $.ajax({
+            type: "POST",
+            url: '/create_consumable_record',
+            data: {
+                'name_item': name_consumables,
+                'unit_item': unit_consumables,
+                'recommended_minimum': recommended_minimum,
+                'current_amount': current_amount,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            },
+
+            success: function (response) {
+                $('#pop_up_here').empty();
+                $('#content').empty();
+                $('#content').append(response);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера! проверьте соединение.');
+            }
+        })
+
+    })
+</script>

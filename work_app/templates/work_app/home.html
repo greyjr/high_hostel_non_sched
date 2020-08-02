@@ -1,0 +1,135 @@
+{% extends 'work_app/wrapper.html' %}
+
+
+{% block title %}
+    головна сторінка
+{% endblock %}
+
+
+{% block misc %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/front_desk.css' %}">
+    <link rel="stylesheet" href="{% static 'css/items.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+
+    <div id="desktop">
+        <div id="pop_up_here"></div>
+
+        <aside>
+            <div>
+                <p style="font-size: 9px" align="center">Область уведомлений
+                </p>
+            </div>
+
+            <div>
+
+            </div>
+        </aside>
+
+        <div id="content" align="center"></div>
+    </div>
+
+    <script>
+        $('#manage_button')
+            .click(function () {
+                $('#content').empty();
+                 $.ajax({
+                    type: 'GET',
+                    url: '/get_manage_page',
+                    {#data: {'data_for_consumable': 'some_text'},#}
+                    success: function (response) {
+                        $('#content').append(response);
+                    },
+                    error: function () {
+                        alert('не удалось получить данные с сервера, проверьте соединение!');
+                    }
+                });
+            });
+
+        $('#state_button')
+            .click(function () {
+                $('#content').empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_state_page',
+                    {#data: {'data_for_consumable': 'some_text'},#}
+                    success: function (response) {
+                        $('#content').append(response);
+                    },
+                    error: function () {
+                        alert('не удалось получить данные с сервера, проверьте соединение!');
+                    }
+                });
+            });
+
+        $('#consumables_button')
+            .click(function () {
+                $('#content').empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_consumables_page',
+                    {#data: {'data_for_consumable': 'some_text'},#}
+                    success: function (response) {
+                        $('#content').append(response);
+                    },
+                    error: function () {
+                        alert('не удалось получить данные с сервера, проверьте соединение!');
+                    }
+                });
+            });
+
+        $('#bar_button')
+            .click(function () {
+                $('#content').empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_bar_page',
+                    {#data: {'data_for_consumable': 'some_text'},#}
+                    success: function (response) {
+                        $('#content').append(response);
+                    },
+                    error: function () {
+                        alert('не удалось получить данные с сервера, проверьте соединение!');
+                    }
+                });
+            });
+
+        $('#chess_button')
+            .click(function () {
+                $('#content').empty();
+
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy = today.getFullYear();
+                today = dd + '.' + mm + '.' + yyyy;
+                get_front_desk(today);
+            });
+
+        function get_front_desk(today) {
+            $.ajax({
+                type: "GET",
+                url: '/get_front_desk',
+                data: {'dateText': today},
+
+                success: function (response) {
+                    $('#content').append(response);
+                    $('#current_date').append(today)
+                },
+                error: function () {
+                    alert('не удалось получить данные с сервера, проверьте соединение!');
+                }
+            })
+        }
+    </script>
+    <!----------------------------------------->
+
+
+{% endblock %}

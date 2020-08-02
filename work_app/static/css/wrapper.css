@@ -1,0 +1,29 @@
+body {
+    background: #E0E0C0;
+    color: #567b8f;
+    width: 98%;
+}
+
+.btn {
+    margin: 2px;
+}
+
+a:focus {
+    outline: none;
+}
+
+.btn-outline-dark,
+.btn-outline-dark:active,
+.btn-outline-dark:visited {
+    border-color: #567b8f !important;
+    color: #567b8f !important;
+}
+
+.btn-outline-dark:hover {
+    background-color: #567b8f !important;
+    color: #E0E0C0 !important;
+    transition: all .5s ease;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    -o-transition: all .5s ease;
+}

@@ -1,0 +1,77 @@
+#desktop {
+    display: flex;
+}
+
+aside {
+    margin: 0 16px 0 16px;
+    width: 30%;
+    border: 1px solid;
+    height: 80vh;
+}
+
+#content {
+    margin: 0;
+    height: 80vh;
+    border: 1px solid;
+    width: 100%;
+}
+
+.plan {
+    margin: 0 0 0 10px;
+}
+
+.room_row_upper > .room {
+    display: inline-block;
+}
+
+.room_row_bottom > .room {
+    /*display: inline-grid;*/
+}
+
+.room {
+    margin: 10px;
+    padding: 5px 15px 5px 5px;
+    width: 15%;
+    background-image: url("../images/back_room.png");
+}
+
+.plan_bed {
+    margin: 5px 5px 10px 5px;
+}
+
+.bed_free {
+    content: url("../images/free_bed.png");
+}
+
+.bed_taken{
+    content: url("../images/taken_bed.png");
+}
+
+.plan_bed:hover {
+    opacity: 0.5;
+}
+
+.info_room_footer {
+    padding: 5px;
+}
+
+.room_number {
+    display: inline-block;
+    background: #bbbbbb;
+    border-radius: 3px;
+    border: 1px solid;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.room_manage {
+    display: inline-block;
+    background: #bbbbbb;
+    border-radius: 3px;
+    height: 28px;
+    width: 70px;
+    font-size: 20px;
+    text-align: center;
+}

@@ -1,0 +1,126 @@
+<div align="center">
+    <table width="100%" style="margin: 10px 0 10px 0">
+        <tr style="height: 40px">
+            <td width="20%">
+
+            </td>
+            <td width="60%" style="text-align: center; vertical-align: top">
+                бар
+            </td>
+            <td style="text-align: center; vertical-align: top;">
+                <a class="btn btn-sm btn-outline-dark" onclick="create_item()"
+                   style="padding-right: 10px; color: white">Добавить позицию</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="div_at_row">
+    <table class="items">
+                <tr class="items_table_header" style="height: 24px;">
+                    <th width="35px">N</th>
+                    <th width="220px">Позиция</th>
+                    <th width="55px">ед.</th>
+                    <th width="55px">надо</th>
+                    <th width="55px">есть</th>
+                </tr>
+    </table>
+    <table class="items" style="margin-left: 10px">
+                <tr class="items_table_header" style="height: 24px;">
+                    <th width="35px">N</th>
+                    <th width="220px">Позиция</th>
+                    <th width="55px">ед.</th>
+                    <th width="55px">надо</th>
+                    <th width="55px">есть</th>
+                </tr>
+    </table>
+</div>
+<div class="outer_item_container" align="center">
+    <div class="inner_item_container">
+        <div class="div_at_row item_tables">
+            <table class="items">
+                <tr class="items_table_header"  style="height: 0;">
+                    <th width="35px"></th>
+                    <th width="220px"></th>
+                    <th width="55px"></th>
+                    <th width="55px"></th>
+                    <th width="55px"></th>
+                </tr>
+
+                {% for row in table1 %}
+                    <tr class="item_row">
+                        {% for cell in row|slice:'1:' %}
+                            <td {% if row.4 > row.5 and forloop.counter == 2 %}
+                                style="color: #ff1a1a; text-align: left; padding-left: 10px" {% endif %}
+                                    {% if forloop.counter == 2 %}
+                                style="text-align: left; padding-left: 10px" {% endif %}
+                                title="{% if row.0 != '' %}запись_№_{% endif %}{{ row.0 }}">
+                                {{ cell }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <table class="items" style="margin-left: 10px">
+                <tr class="items_table_header"  style="height: 0;">
+                    <th width="35px"></th>
+                    <th width="220px"></th>
+                    <th width="55px"></th>
+                    <th width="55px"></th>
+                    <th width="55px"></th>
+                </tr>
+
+                {% for row in table2 %}
+                    <tr class="item_row">
+                        {% for cell in row|slice:"1:" %}
+                            <td {% if row.4 > row.5 and forloop.counter == 2 %}
+                                style="color: #ff1a1a; text-align: left; padding-left: 10px" {% endif %}
+                                    {% if forloop.counter == 2 %}
+                                style="text-align: left; padding-left: 10px" {% endif %}
+                                title="{% if row.0 != '' %}запись_№_{% endif %}{{ row.0 }}">
+                                {{ cell }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+<!--------------- get item form ----------------------------->
+<script>
+    $('.item_row').click(function () {
+        var record_number = this.getElementsByTagName('td')[0].getAttribute('title');
+        if (record_number === '') {
+            return false
+        }
+        $.ajax({
+            type: "GET",
+            url: '/get_bar_panel',
+            data: {
+                'bar_id_item': record_number,
+            },
+            success: function (response) {
+                $('#pop_up_here').append(response);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера! проверьте соединение.');
+            }
+        });
+    })
+</script>
+<!--------------- create item ------------------------------->
+<script>
+    function create_item() {
+        $.ajax({
+            type: 'GET',
+            url: '/create_bar_form',
+            success: function (response) {
+                $('#pop_up_here').append(response);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера! проверьте соединение.')
+            }
+        })
+    }
+</script>

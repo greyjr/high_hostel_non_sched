@@ -1,0 +1,109 @@
+<div class="b-popup" id="popup1" align="center">
+    <div class="b-popup-content">
+        <form>
+
+            <div style="text-align: center; font-size: 20px; "><b><u>{{ form.name_item.value }}</u></b></div>
+            <br>
+            <div id="delete_item_confirm" style="display: none; font-size: 12px">
+                <p>Желаете удалить позицию "{{ form.name_item.value }}" ?</p>
+                <a class="btn btn-sm btn-outline-danger" id="confirm_delete_form_button">Удалить</a>
+                <a class="btn btn-sm btn-outline-success" id="cancel_delete_bar_button">Отмена</a>
+                <hr>
+            </div>
+            <div class="item_form_field form-row">
+                <div class="col-7 my-auto"
+                     style="text-align:right; font-size: 16px">{{ form.recommended_minimum.label }}</div>
+                <div class="col-5"
+                     style="text-align:left; font-size: 16px">{{ form.recommended_minimum }} {{ form.unit_item.value }}</div>
+            </div>
+            <br>
+            <div class="item_form_field form-row">
+                <div class="col-7 my-auto"
+                     style="text-align:right; font-size: 16px">{{ form.current_amount.label }}</div>
+                <div class="col-5"
+                     style="text-align:left; font-size: 16px">{{ form.current_amount }} {{ form.unit_item.value }}</div>
+            </div>
+
+        </form>
+        <br>
+        <div>
+            <a class="btn btn-sm btn-outline-success" id="save_bar_form_button">Сохранить</a>
+            <a class="btn btn-sm btn-outline-danger" id="delete_bar_form_button">Удалить</a>
+            <a class="btn btn-sm btn-outline-dark" id="close_bar_form_button">Закрыть окно</a>
+        </div>
+
+    </div>
+</div>
+
+
+<!--------------- close form --------------------------->
+<script>
+    $('#close_bar_form_button').click(function () {
+        $('#pop_up_here').empty();
+    });
+    $('#cancel_delete_bar_button').click(function () {
+        $('#pop_up_here').empty();
+    });
+</script>
+<!--------------- delete confirm ----------------------->
+<script>
+    $('#delete_bar_form_button').click(function () {
+        $('#delete_item_confirm').show(300)
+    })
+</script>
+<!--------------- delete form --------------------------->
+<script>
+    $('#confirm_delete_form_button').click(function () {
+        $.ajax({
+            type: "POST",
+            url: '/delete_bar_record',
+            data: {
+                'id_item': {{ form.id_item.value }},
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+
+            success: function (response) {
+                $('#pop_up_here').empty();
+                $('#content').empty();
+                $('#content').append(response);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера! проверьте соединение.');
+            }
+        });
+    });
+</script>
+<!--------------- save form ----------------------------->
+<script>
+    $('#save_bar_form_button').click(function () {
+        var current = (document.getElementById('id_current_amount'));
+        var current_amount = current.value;
+        if (current.value.length === 0 || current.value * 1 > 10000) {
+            current_amount = '0'
+        }
+        var recommend = (document.getElementById('id_recommended_minimum'));
+        var recommended_minimum = recommend.value;
+        if (recommend.value.length === 0 || recommend.value * 1 > 10000) {
+            recommended_minimum = '0'
+        }
+        $.ajax({
+            type: "POST",
+            url: '/save_bar_record',
+            data: {
+                'id_item': {{ form.id_item.value }},
+                'recommended_minimum': recommended_minimum,
+                'current_amount': current_amount,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+
+            success: function (response) {
+                $('#pop_up_here').empty();
+                $('#content').empty();
+                $('#content').append(response);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера! проверьте соединение.');
+            }
+        })
+    })
+</script>

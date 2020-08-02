@@ -1,0 +1,179 @@
+<div id="choose_date" align="center" style="margin-top: 4px">
+    <span id="day_back"><a class="btn btn-sm"><img src="../static/images/left_arrow.png"></a></span>
+
+    <input type="text" id="datepicker" style="width:120px; text-align: center" placeholder="Выбрать дату"
+           autocomplete="off">
+
+    <label id="current_date"></label>
+
+    <span id="day_forward"><a class="btn btn-sm"><img src="../static/images/right_arrow.png"></a></span>
+
+    <br><img src="../static/images/day_pointer.png" alt="pointer">
+</div>
+
+<table id="front_desk">
+    <tbody>
+
+    <tr>
+        <td class="empty"></td>
+
+        {% for month in month_line %}
+            <td class="month_line" colspan="{{ month.1 }}">{{ month.0 }}</td>
+        {% endfor %}
+
+    </tr>
+    <tr>
+        <td class="empty"></td>
+        {% for date_day in date_days %}
+            <td class="header"
+                    {% if forloop.counter == half_interval %}
+                style="font-weight: 900; color: #a41515; border: #567b8f;"
+                    {% endif %}>
+                {{ date_day }}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td class="empty">место</td>
+        {% for week_day in week_days %}
+            <td class="header"
+                    {% if  week_day == 'сб' and forloop.counter != half_interval or week_day == 'вс' and forloop.counter != half_interval %}
+                style="background: #daeef3;"
+                    {% endif %}
+                    {% if forloop.counter == half_interval %}
+                style="font-weight: 900; color: #a41515; border: #567b8f;"
+                    {% endif %}>
+                {{ week_day }}</td>
+        {% endfor %}
+    </tr>
+
+    {% for row in matrix %}
+        <tr>
+            {% if row|length == 1 %}
+                <td class="room_line" colspan="32">{{ row.0 }}</td>
+            {% else %}
+
+                <td class="bed_number">{{ row.0 }}</td>
+
+                {% for cell in row.1 %}
+                    <td class="inner_td {{ cell.0 }} order_{{ cell.1 }}"
+                            {% if cell.1 != 'none' %}
+                        title="Заказ: {{ cell.1 }}" {% endif %}>
+
+                    </td>
+                {% endfor %}
+            {% endif %}
+        </tr>
+    {% endfor %}
+
+
+    </tbody>
+</table>
+
+
+<!----------------------------------------->
+<script>
+    $(".inner_td").click(function () {
+
+        let cell = event.target;
+        let day_from_left_side = cell.cellIndex;
+        let order_number_class = this.classList[2];
+        let row = this.parentNode.rowIndex;
+
+        let yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        let cell_date_string = get_date(day_from_left_side - {{ half_interval }});
+        let [day, month, year] = cell_date_string.split('.');
+        let cell_date_iso = new Date(year, month - 1, day);
+        if (this.classList.contains('order_none') && yesterday > cell_date_iso) {
+            return
+        }
+
+        $.ajax({
+            type: "GET",
+            url: '/get_order_form',
+            data: {
+                'cell_date_string': cell_date_string,
+                'order_number_class': order_number_class,
+                'row': row,
+            },
+
+            success: function (response) {
+                $('#pop_up_here').append(response);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера!');
+            }
+        });
+    });
+</script>
+<!----------------------------------------->
+<script>
+    /* Локализация datepicker */
+    $.datepicker.regional['ru'] = {
+        closeText: 'Закрыть',
+        prevText: 'Предыдущий',
+        nextText: 'Следующий',
+        currentText: 'Сегодня',
+        monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+        dayNames: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+        dayNamesShort: ['вск', 'пнд', 'втр', 'срд', 'чтв', 'птн', 'сбт'],
+        dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+        weekHeader: 'Не',
+        dateFormat: 'dd.mm.yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        changeMonth: true,
+        changeYear: true
+    };
+    $.datepicker.setDefaults($.datepicker.regional['ru']);
+</script>
+<!----------------------------------------->
+<script>
+
+    $('#day_forward').click(function () {
+        get_front_desk(get_date(1))
+    });
+
+    $('#day_back').click(function () {
+        get_front_desk(get_date(-1));
+    });
+
+    $("#datepicker").datepicker({
+        onSelect: function (dateText) {
+            get_front_desk(dateText)
+        }
+    });
+
+    function get_date(delta) {
+        let [day, month, year] = ($('#current_date').text()).split('.');
+        let date_now = new Date(year, month - 1, day);
+        date_now.setDate(date_now.getDate() + delta);
+        let date_forward = date_now;
+        var dd = String(date_forward.getDate()).padStart(2, '0');
+        var mm = String(date_forward.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = date_forward.getFullYear();
+        return dd + '.' + mm + '.' + yyyy
+    }
+
+
+    function get_front_desk(date_string) {
+        $.ajax({
+            type: "GET",
+            url: '/get_front_desk',
+            data: {'dateText': date_string},
+
+            success: function (response) {
+                $('#content').empty();
+                $('#content').append(response);
+                $('#current_date').append(date_string);
+            },
+            error: function () {
+                alert('не удалось получить данные с сервера!');
+            }
+        });
+    }
+
+</script>

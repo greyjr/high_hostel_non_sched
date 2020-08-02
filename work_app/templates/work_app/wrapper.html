@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+    <script src="{% static 'js/jQuery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/wrapper.css' %}" rel="stylesheet">
+    {#    <script src="{% static 'js/loader.js' %}"></script>#}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+
+    {% block misc %}
+    {% endblock %}
+
+</head>
+
+<body>
+<div class="row">
+
+    <div class="col col-3" align="center">
+        <img src="{% static 'images/logo_hostel.png' %}" alt="logo">
+    </div>
+
+    <div class="col col-9" style="margin-top: 12px" align="center">
+        <a class="btn btn-outline-dark btn-lg" id="manage_button">Управление</a>
+        <a class="btn btn-outline-dark btn-lg" id="chess_button">Сетка</a>
+        <a class="btn btn-outline-dark btn-lg" id="state_button">Состояние</a>
+        <a class="btn btn-outline-dark btn-lg" id="consumables_button">Расходники</a>
+        <a class="btn btn-outline-dark btn-lg" id="bar_button">Бар</a>
+        <a href="#" class="btn btn-outline-dark btn-lg">Клиенты</a>
+        <a href="#" class="btn btn-outline-dark btn-lg">Журнал</a>
+    </div>
+</div>
+
+
+<br>
+{% block content %}
+{% endblock %}
+
+
+</body>
+</html>
